@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบสำรวจการไปทัศนศึกษา</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        body { font-family: 'Sarabun', sans-serif; background-color: #f4f6f9; }
+        .container { max-width: 900px; margin-top: 30px; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        h2 { color: #2c3e50; font-weight: bold; }
+        .nav-tabs .nav-link.active { background-color: #0d6efd; color: white; border-color: #0d6efd; }
+        .nav-tabs .nav-link { color: #555; font-weight: 600; }
+        .card-stat { border: none; border-radius: 10px; color: white; text-align: center; padding: 20px; }
+        .bg-total { background: linear-gradient(45deg, #6a11cb, #2575fc); }
+        .bg-go { background: linear-gradient(45deg, #11998e, #38ef7d); }
+        .bg-no { background: linear-gradient(45deg, #ff5f6d, #ffc371); }
+        
+        /* Print Styles */
+        @media print {
+            body * { visibility: hidden; }
+            #print-area, #print-area * { visibility: visible; }
+            #print-area { position: absolute; left: 0; top: 0; width: 100%; }
+            .no-print { display: none !important; }
+            .card { border: none !important; box-shadow: none !important; }
+            table { width: 100% !important; border-collapse: collapse; }
+            th, td { border: 1px solid black !important; padding: 8px; font-size: 14pt; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2 class="text-center mb-4"><i class="fas fa-bus-alt"></i> ระบบสำรวจนักเรียนที่จะไปทัศนศึกษา</h2>
+
+    <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="form-tab" data-bs-toggle="tab" data-bs-target="#form-content" type="button"><i class="fas fa-user-edit"></i> กรอกข้อมูล</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="stats-tab" data-bs-toggle="tab" data-bs-target="#stats-content" type="button"><i class="fas fa-chart-pie"></i> สรุปสถิติ</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="print-tab" data-bs-toggle="tab" data-bs-target="#print-content" type="button"><i class="fas fa-print"></i> พิมพ์รายชื่อ</button>
+        </li>
+    </ul>
+
+    <div class="tab-content" id="myTabContent">
+        
+        <div class="tab-pane fade show active" id="form-content">
+            <form id="surveyForm">
+                <div class="row g-3">
+                    <div class="col-md-2">
+                        <label class="form-label">คำนำหน้า</label>
+                        <select class="form-select" id="prefix" required>
+                            <option value="">เลือก</option>
+                            <option value="เด็กชาย">ด.ช.</option>
+                            <option value="เด็กหญิง">ด.ญ.</option>
+                            <option value="นาย">นาย</option>
+                            <option value="นางสาว">น.ส.</option>
+                        </select>
+                    </div>
+                    <div class="col-md-5">
+                        <label class="form-label">ชื่อ</label>
+                        <input type="text" class="form-control" id="firstname" required>
+                    </div>
+                    <div class="col-md-5">
+                        <label class="form-label">นามสกุล</label>
+                        <input type="text" class="form-control" id="lastname" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">ระดับชั้น</label>
+                        <select class="form-select" id="grade" required>
+                            <option value="">เลือกระดับชั้น</option>
+                            <option value="ม.1">มัธยมศึกษาปีที่ 1</option>
+                            <option value="ม.2">มัธยมศึกษาปีที่ 2</option>
+                            <option value="ม.3">มัธยมศึกษาปีที่ 3</option>
+                            <option value="ม.4">มัธยมศึกษาปีที่ 4</option>
+                            <option value="ม.5">มัธยมศึกษาปีที่ 5</option>
+                            <option value="ม.6">มัธยมศึกษาปีที่ 6</option>
+                        </select>
+                    </div>
+                    <div class="col-md-8">
+                        <label class="form-label d-block">ความประสงค์</label>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="status" id="status_go" value="ไป" checked onchange="toggleReason()">
+                            <label class="form-check-label text-success fw-bold" for="status_go">ไปทัศนศึกษา</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="status" id="status_nogo" value="ไม่ไป" onchange="toggleReason()">
+                            <label class="form-check-label text-danger fw-bold" for="status_nogo">ไม่ไป</label>
+                        </div>
+                    </div>
+                    
+                    <div class="col-12" id="reason_box" style="display: none;">
+                        <label class="form-label text-danger">ระบุเหตุผลที่ไม่ไป</label>
+                        <input type="text" class="form-control" id="reason" placeholder="เช่น ติดธุระ, ป่วย ฯลฯ">
+                    </div>
+
+                    <div class="col-12 mt-4 text-center">
+                        <button type="submit" class="btn btn-primary btn-lg w-50"><i class="fas fa-save"></i> บันทึกข้อมูล</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="tab-pane fade" id="stats-content">
+            <div class="row g-3 mb-4">
+                <div class="col-md-4">
+                    <div class="card-stat bg-total">
+                        <h3><i class="fas fa-users"></i> ทั้งหมด</h3>
+                        <h1 id="stat-total">0</h1>
+                        <small>คน</small>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card-stat bg-go">
+                        <h3><i class="fas fa-check-circle"></i> ไป</h3>
+                        <h1 id="stat-go">0</h1>
+                        <small>คน</small>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card-stat bg-no">
+                        <h3><i class="fas fa-times-circle"></i> ไม่ไป</h3>
+                        <h1 id="stat-nogo">0</h1>
+                        <small>คน</small>
+                    </div>
+                </div>
+            </div>
+            
+            <h5 class="mt-4"><i class="fas fa-list-ol"></i> แยกตามระดับชั้น (เฉพาะคนที่ไป)</h5>
+            <table class="table table-bordered table-striped text-center">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ระดับชั้น</th>
+                        <th>จำนวน (คน)</th>
+                    </tr>
+                </thead>
+                <tbody id="stat-table-body">
+                    </tbody>
+            </table>
+        </div>
+
+        <div class="tab-pane fade" id="print-content">
+            <div class="text-end mb-3">
+                <button onclick="window.print()" class="btn btn-secondary"><i class="fas fa-print"></i> สั่งพิมพ์ / บันทึก PDF</button>
+            </div>
+            
+            <div id="print-area">
+                <div class="text-center mb-4">
+                    <h3>ใบรายชื่อนักเรียนไปทัศนศึกษา</h3>
+                    <p>โรงเรียน................................................................</p>
+                </div>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr class="table-secondary text-center">
+                            <th width="10%">ลำดับ</th>
+                            <th width="20%">ระดับชั้น</th>
+                            <th width="40%">ชื่อ-นามสกุล</th>
+                            <th width="30%">เช็คชื่อ (ลายเซ็น)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="print-table-body">
+                        </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyBXlC5PuJ8F72q2u_lWOpF3STi4wtn3wRs",
+      authDomain: "tassanasuksa-8383f.firebaseapp.com",
+      databaseURL: "https://tassanasuksa-8383f-default-rtdb.firebaseio.com",
+      projectId: "tassanasuksa-8383f",
+      storageBucket: "tassanasuksa-8383f.firebasestorage.app",
+      messagingSenderId: "148913473074",
+      appId: "1:148913473074:web:be55a20af6365bb4225e2b"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    // Toggle Reason Input
+    window.toggleReason = function() {
+        const isNotGoing = document.getElementById('status_nogo').checked;
+        const reasonBox = document.getElementById('reason_box');
+        const reasonInput = document.getElementById('reason');
+        
+        if (isNotGoing) {
+            reasonBox.style.display = 'block';
+            reasonInput.setAttribute('required', 'required');
+        } else {
+            reasonBox.style.display = 'none';
+            reasonInput.removeAttribute('required');
+            reasonInput.value = '';
+        }
+    }
+
+    // Submit Form
+    document.getElementById('surveyForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const status = document.querySelector('input[name="status"]:checked').value;
+        const data = {
+            prefix: document.getElementById('prefix').value,
+            firstname: document.getElementById('firstname').value,
+            lastname: document.getElementById('lastname').value,
+            grade: document.getElementById('grade').value,
+            status: status,
+            reason: status === 'ไม่ไป' ? document.getElementById('reason').value : '-',
+            timestamp: new Date().toISOString()
+        };
+
+        push(ref(db, 'students'), data)
+            .then(() => {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'บันทึกสำเร็จ',
+                    text: 'ขอบคุณที่ให้ข้อมูล',
+                    timer: 1500,
+                    showConfirmButton: false
+                });
+                document.getElementById('surveyForm').reset();
+                toggleReason(); // Reset UI state
+            })
+            .catch((error) => {
+                Swal.fire('Error', error.message, 'error');
+            });
+    });
+
+    // Real-time Data Loading
+    const studentsRef = ref(db, 'students');
+    onValue(studentsRef, (snapshot) => {
+        const data = snapshot.val();
+        const tableBody = document.getElementById('print-table-body');
+        const statTableBody = document.getElementById('stat-table-body');
+        
+        // Reset Stats
+        let total = 0, goCount = 0, noCount = 0;
+        let gradeStats = { 'ม.1': 0, 'ม.2': 0, 'ม.3': 0, 'ม.4': 0, 'ม.5': 0, 'ม.6': 0 };
+        
+        // Clear Tables
+        tableBody.innerHTML = '';
+        statTableBody.innerHTML = '';
+
+        if (data) {
+            // Convert Object to Array for easier sorting
+            const studentsArray = Object.values(data);
+            
+            // Sort by Grade then Name
+            studentsArray.sort((a, b) => {
+                if (a.grade === b.grade) {
+                    return a.firstname.localeCompare(b.firstname, 'th');
+                }
+                return a.grade.localeCompare(b.grade);
+            });
+
+            let printIndex = 1;
+
+            studentsArray.forEach(student => {
+                total++;
+                if (student.status === 'ไป') {
+                    goCount++;
+                    if (gradeStats[student.grade] !== undefined) {
+                        gradeStats[student.grade]++;
+                    }
+                    
+                    // Add to Print Table
+                    const row = `
+                        <tr>
+                            <td class="text-center">${printIndex++}</td>
+                            <td class="text-center">${student.grade}</td>
+                            <td>${student.prefix}${student.firstname} ${student.lastname}</td>
+                            <td></td>
+                        </tr>
+                    `;
+                    tableBody.innerHTML += row;
+
+                } else {
+                    noCount++;
+                }
+            });
+
+            // Update Stats Display
+            document.getElementById('stat-total').innerText = total;
+            document.getElementById('stat-go').innerText = goCount;
+            document.getElementById('stat-nogo').innerText = noCount;
+
+            // Render Grade Stats Table
+            for (const [grade, count] of Object.entries(gradeStats)) {
+                if (count > 0) { // Show only grades with students
+                    statTableBody.innerHTML += `
+                        <tr>
+                            <td>${grade}</td>
+                            <td>${count}</td>
+                        </tr>
+                    `;
+                }
+            }
+        } else {
+            tableBody.innerHTML = '<tr><td colspan="4" class="text-center">ยังไม่มีข้อมูล</td></tr>';
+            statTableBody.innerHTML = '<tr><td colspan="2" class="text-center">ยังไม่มีข้อมูล</td></tr>';
+        }
+    });
+
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
