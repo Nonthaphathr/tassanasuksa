@@ -21,100 +21,105 @@
             font-family: 'Sarabun', sans-serif; 
             background-color: var(--bg-color); 
             color: var(--text-dark);
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
-            min-height: 100vh;
         }
         .main-container {
-            max-width: 950px;
-            margin: 40px auto;
+            max-width: 1000px;
+            margin: 30px auto;
             background: #ffffff;
             padding: 40px;
             border-radius: 20px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.08);
             flex: 1;
         }
-        .school-logo-img {
-            max-height: 100px;
-            margin-bottom: 20px;
-            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
-        }
+        .school-logo-img { max-height: 100px; margin-bottom: 20px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1)); }
         h2 { color: var(--primary-color); font-weight: 700; margin-bottom: 30px; }
         
-        /* Pills & Form styles remain similar to previous version */
+        /* Pills & Form */
         .nav-pills .nav-link.active { background-color: var(--primary-color); box-shadow: 0 4px 10px rgba(13, 71, 161, 0.3); }
-        .nav-pills .nav-link { color: #6c757d; font-weight: 600; border-radius: 50px; padding: 10px 25px; margin-right: 10px; }
-        .form-control, .form-select { border-radius: 12px; padding: 12px 15px; background-color: #f8f9fa; border: 1px solid #dee2e6; }
-        .form-control:focus, .form-select:focus { background-color: #fff; border-color: var(--primary-color); box-shadow: 0 0 0 4px rgba(13, 71, 161, 0.1); }
-        .btn-primary-theme { background-color: var(--primary-color); border: none; border-radius: 50px; padding: 12px 30px; font-weight: 600; box-shadow: 0 4px 15px rgba(13, 71, 161, 0.4); }
+        .nav-pills .nav-link { color: #6c757d; font-weight: 600; border-radius: 50px; padding: 10px 20px; margin-right: 5px; }
+        .form-control, .form-select { border-radius: 12px; padding: 10px 15px; background-color: #f8f9fa; border: 1px solid #dee2e6; }
+        .btn-primary-theme { background-color: var(--primary-color); border: none; border-radius: 50px; padding: 10px 30px; font-weight: 600; box-shadow: 0 4px 15px rgba(13, 71, 161, 0.4); }
         .btn-primary-theme:hover { background-color: #0a367a; transform: translateY(-2px); }
 
         /* Stats */
-        .card-stat { border: none; border-radius: 16px; color: white; text-align: center; padding: 25px; box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
+        .card-stat { border: none; border-radius: 16px; color: white; text-align: center; padding: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
         .bg-total { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
         .bg-go { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); }
         .bg-no { background: linear-gradient(135deg, #ff5f6d 0%, #ffc371 100%); }
 
+        /* Data Table (Manage Tab) */
+        .table-manage th { background-color: #f8f9fa; color: var(--text-dark); }
+        .action-btn { width: 35px; height: 35px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin: 0 2px; border: none; }
+        .btn-edit { background-color: #ffc107; color: #333; }
+        .btn-delete { background-color: #dc3545; color: white; }
+
         /* Footer */
-        .web-footer {
-            text-align: center;
-            padding: 20px;
-            color: #6c757d;
-            font-size: 0.9rem;
-            margin-top: auto;
-        }
+        .web-footer { text-align: center; padding: 20px; color: #6c757d; font-size: 0.9rem; margin-top: auto; }
 
-        /* Print Styles */
-        .print-section { display: none; } /* Hidden by default */
-        .grade-header { 
-            background-color: #e9ecef; 
-            padding: 10px; 
-            border-radius: 5px; 
-            margin-top: 20px; 
-            margin-bottom: 10px; 
-            font-weight: bold;
-            border-left: 5px solid var(--primary-color);
-        }
-
+        /* === PRINT STYLES FIXED === */
+        .print-section { display: none; } 
+        
         @media print {
-            body { background-color: white; }
-            .main-container { box-shadow: none; margin: 0; padding: 0; max-width: 100%; }
-            .no-print-area, .web-footer { display: none !important; }
+            @page { margin: 1cm; size: A4 portrait; } /* Reset page margin */
+            body { 
+                background-color: white; 
+                margin: 0; 
+                padding: 0; 
+                visibility: hidden; /* Hide everything by default */
+            }
             
-            .print-section.active-print { display: block !important; }
-            
-            .print-footer {
-                position: fixed;
-                bottom: 0;
+            /* Hide web UI elements */
+            .no-print-area, .main-container, .web-footer, .modal { display: none !important; }
+
+            /* Show specific print section */
+            .print-section.active-print { 
+                display: block !important; 
+                visibility: visible;
+                position: absolute;
+                left: 0;
+                top: 0;
                 width: 100%;
-                text-align: center;
-                font-size: 12px;
-                color: #555;
-                padding: 10px;
-                border-top: 1px solid #ddd;
-                background: white;
+                margin: 0;
             }
 
-            table { width: 100% !important; border-collapse: collapse; page-break-inside: auto; }
-            tr { page-break-inside: avoid; page-break-after: auto; }
-            th, td { border: 1px solid #333 !important; padding: 8px; font-size: 12pt; color: black; }
-            thead th { background-color: #f0f0f0 !important; -webkit-print-color-adjust: exact; }
+            /* Header Positioning */
+            .print-header-content {
+                width: 100%;
+                text-align: center;
+                margin-bottom: 20px;
+                display: block;
+            }
+            .print-header-content img { height: 70px; }
+            .print-header-content h3 { margin-top: 10px; font-size: 20pt; font-weight: bold; }
+
+            table { width: 100% !important; border-collapse: collapse; }
+            th, td { border: 1px solid #000 !important; padding: 6px; font-size: 14pt; color: black; }
+            thead th { background-color: #eee !important; -webkit-print-color-adjust: exact; }
             
-            /* Ensure each grade table starts nicely */
-            .grade-table-wrapper { page-break-inside: avoid; margin-bottom: 20px; }
+            .print-footer {
+                position: fixed; bottom: 0; left: 0; width: 100%;
+                text-align: center; font-size: 12px; color: #555;
+                padding: 10px; border-top: 1px solid #ccc; background: white;
+            }
+            /* Prevent page break inside table group */
+            .grade-table-wrapper { break-inside: avoid; page-break-inside: avoid; margin-bottom: 20px; }
         }
     </style>
 </head>
 <body>
 
-<div class="container main-container">
-    <div class="text-center no-print-area">
+<div class="container main-container no-print-area">
+    <div class="text-center">
         <img src="https://nonthaphathr.github.io/uploadimg/logoschool.png" alt="School Logo" class="school-logo-img">
         <h2>ระบบสำรวจนักเรียนที่จะไปทัศนศึกษา</h2>
     </div>
 
-    <ul class="nav nav-pills justify-content-center mb-4 no-print-area" id="myTab" role="tablist">
+    <ul class="nav nav-pills justify-content-center mb-4" id="myTab" role="tablist">
         <li class="nav-item"><button class="nav-link active" data-bs-toggle="pill" data-bs-target="#form-content"><i class="fas fa-user-edit me-2"></i>กรอกข้อมูล</button></li>
+        <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#manage-content"><i class="fas fa-tasks me-2"></i>จัดการข้อมูล (แก้ไข/ลบ)</button></li>
         <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#stats-content"><i class="fas fa-chart-pie me-2"></i>สรุปสถิติ</button></li>
         <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#print-content"><i class="fas fa-print me-2"></i>พิมพ์รายชื่อ</button></li>
     </ul>
@@ -158,11 +163,11 @@
                         <label class="form-label d-block">ความประสงค์</label>
                         <div class="p-2 border rounded bg-light d-inline-block">
                             <div class="form-check form-check-inline me-4">
-                                <input class="form-check-input" type="radio" name="status" id="status_go" value="ไป" checked onchange="toggleReason()">
+                                <input class="form-check-input" type="radio" name="status" id="status_go" value="ไป" checked onchange="toggleReason('reason_box', 'reason', 'status_nogo')">
                                 <label class="form-check-label text-success fw-bold" for="status_go">ไปทัศนศึกษา</label>
                             </div>
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="status" id="status_nogo" value="ไม่ไป" onchange="toggleReason()">
+                                <input class="form-check-input" type="radio" name="status" id="status_nogo" value="ไม่ไป" onchange="toggleReason('reason_box', 'reason', 'status_nogo')">
                                 <label class="form-check-label text-danger fw-bold" for="status_nogo">ไม่ไป</label>
                             </div>
                         </div>
@@ -178,44 +183,43 @@
             </form>
         </div>
 
+        <div class="tab-pane fade" id="manage-content">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="text-primary"><i class="fas fa-list"></i> รายชื่อทั้งหมด</h5>
+                <input type="text" id="searchInput" class="form-control w-25" placeholder="ค้นหาชื่อ..." onkeyup="filterManageTable()">
+            </div>
+            <div class="table-responsive" style="max-height: 500px; overflow-y: auto;">
+                <table class="table table-hover table-bordered table-manage">
+                    <thead class="table-light sticky-top">
+                        <tr>
+                            <th>ชั้น</th>
+                            <th>ชื่อ-นามสกุล</th>
+                            <th>สถานะ</th>
+                            <th>จัดการ</th>
+                        </tr>
+                    </thead>
+                    <tbody id="manage-table-body">
+                        </tbody>
+                </table>
+            </div>
+        </div>
+
         <div class="tab-pane fade" id="stats-content">
-            <div class="row g-4 mb-5">
-                <div class="col-md-4">
-                    <div class="card-stat bg-total">
-                        <h3><i class="fas fa-users"></i> ทั้งหมด</h3>
-                        <h1 id="stat-total">0</h1>
-                        <small>คน</small>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card-stat bg-go">
-                        <h3><i class="fas fa-bus"></i> ไป</h3>
-                        <h1 id="stat-go">0</h1>
-                        <small>คน</small>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card-stat bg-no">
-                        <h3><i class="fas fa-user-times"></i> ไม่ไป</h3>
-                        <h1 id="stat-nogo">0</h1>
-                        <small>คน</small>
-                    </div>
-                </div>
+            <div class="row g-4 mb-4">
+                <div class="col-md-4"><div class="card-stat bg-total"><h3><i class="fas fa-users"></i> ทั้งหมด</h3><h1 id="stat-total">0</h1></div></div>
+                <div class="col-md-4"><div class="card-stat bg-go"><h3><i class="fas fa-bus"></i> ไป</h3><h1 id="stat-go">0</h1></div></div>
+                <div class="col-md-4"><div class="card-stat bg-no"><h3><i class="fas fa-user-times"></i> ไม่ไป</h3><h1 id="stat-nogo">0</h1></div></div>
             </div>
             <div class="card border-0 shadow-sm">
-                <div class="card-header bg-white border-bottom-0"><h5 class="text-primary fw-bold">สถิติแยกตามระดับชั้น (เฉพาะคนที่ไป)</h5></div>
+                <div class="card-header bg-white"><h5 class="text-primary">สถิติแยกตามระดับชั้น (เฉพาะคนที่ไป)</h5></div>
                 <div class="card-body p-0">
-                    <table class="table table-hover table-striped text-center mb-0">
-                        <thead class="table-primary text-white"><tr><th>ระดับชั้น</th><th>จำนวน (คน)</th></tr></thead>
-                        <tbody id="stat-table-body"></tbody>
-                    </table>
+                    <table class="table table-striped text-center mb-0"><thead class="table-primary text-white"><tr><th>ระดับชั้น</th><th>จำนวน</th></tr></thead><tbody id="stat-table-body"></tbody></table>
                 </div>
             </div>
         </div>
 
         <div class="tab-pane fade" id="print-content">
-            
-            <div class="row mb-4 p-3 bg-light rounded no-print-area align-items-end">
+            <div class="row mb-4 p-3 bg-light rounded align-items-end">
                 <div class="col-md-4">
                     <label class="form-label">กรองระดับชั้นที่จะพิมพ์:</label>
                     <select class="form-select" id="printFilterGrade" onchange="renderPrintTables()">
@@ -233,49 +237,89 @@
                     <button onclick="printSection('print-section-nogo')" class="btn btn-danger"><i class="fas fa-print"></i> พิมพ์สรุป (คนไม่ไป)</button>
                 </div>
             </div>
-
-            <div id="print-preview-area">
-                <div class="alert alert-info no-print-area">
-                    <i class="fas fa-info-circle"></i> เลือก "ระดับชั้น" ด้านบนเพื่อดูรายชื่อเฉพาะชั้น หรือกดปุ่มพิมพ์เพื่อสั่งพิมพ์เอกสาร
-                </div>
-            </div>
-
-            <div id="print-section-go" class="print-section">
-                <div class="text-center d-none d-print-block mb-3">
-                    <img src="https://nonthaphathr.github.io/uploadimg/logoschool.png" alt="School Logo" style="height: 60px;">
-                    <h3>ใบรายชื่อนักเรียนไปทัศนศึกษา</h3>
-                </div>
-                
-                <div id="print-container-go"></div> <div class="print-footer d-none d-print-block">
-                    พัฒนาโดย ครูนนทพัทธ์ หิรัญเรือง
-                </div>
-            </div>
-
-            <div id="print-section-nogo" class="print-section">
-                <div class="text-center d-none d-print-block mb-3">
-                    <img src="https://nonthaphathr.github.io/uploadimg/logoschool.png" alt="School Logo" style="height: 60px;">
-                    <h3>สรุปรายชื่อนักเรียนที่ "ไม่ไป" ทัศนศึกษา</h3>
-                </div>
-
-                <div id="print-container-nogo"></div> <div class="print-footer d-none d-print-block">
-                    พัฒนาโดย ครูนนทพัทธ์ หิรัญเรือง
-                </div>
-            </div>
-
+            <div id="print-preview-area" class="alert alert-info"><i class="fas fa-info-circle"></i> เลือก "ระดับชั้น" และกดปุ่มพิมพ์</div>
         </div>
-
     </div>
 </div>
 
 <footer class="web-footer no-print-area">
     <hr>
     <p class="mb-0">พัฒนาโดย ครูนนทพัทธ์ หิรัญเรือง</p>
-    <small>ระบบสำรวจข้อมูลนักเรียน Version 2.0</small>
+    <small>ระบบสำรวจข้อมูลนักเรียน Version 3.0</small>
 </footer>
+
+<div id="print-section-go" class="print-section">
+    <div class="print-header-content">
+        <img src="https://nonthaphathr.github.io/uploadimg/logoschool.png" alt="School Logo">
+        <h3>ใบรายชื่อนักเรียนไปทัศนศึกษา</h3>
+    </div>
+    <div id="print-container-go"></div>
+    <div class="print-footer">พัฒนาโดย ครูนนทพัทธ์ หิรัญเรือง</div>
+</div>
+
+<div id="print-section-nogo" class="print-section">
+    <div class="print-header-content">
+        <img src="https://nonthaphathr.github.io/uploadimg/logoschool.png" alt="School Logo">
+        <h3>สรุปรายชื่อนักเรียนที่ "ไม่ไป" ทัศนศึกษา</h3>
+    </div>
+    <div id="print-container-nogo"></div>
+    <div class="print-footer">พัฒนาโดย ครูนนทพัทธ์ หิรัญเรือง</div>
+</div>
+
+<div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-warning">
+                <h5 class="modal-title"><i class="fas fa-edit"></i> แก้ไขข้อมูล</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editForm">
+                    <input type="hidden" id="edit_id">
+                    <div class="mb-2">
+                        <label>คำนำหน้า</label>
+                        <select class="form-select" id="edit_prefix">
+                            <option value="เด็กชาย">ด.ช.</option>
+                            <option value="เด็กหญิง">ด.ญ.</option>
+                            <option value="นาย">นาย</option>
+                            <option value="นางสาว">น.ส.</option>
+                        </select>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col"><label>ชื่อ</label><input type="text" class="form-control" id="edit_firstname"></div>
+                        <div class="col"><label>นามสกุล</label><input type="text" class="form-control" id="edit_lastname"></div>
+                    </div>
+                    <div class="mb-2">
+                        <label>ระดับชั้น</label>
+                        <select class="form-select" id="edit_grade">
+                            <option value="ม.1">ม.1</option><option value="ม.2">ม.2</option><option value="ม.3">ม.3</option>
+                            <option value="ม.4">ม.4</option><option value="ม.5">ม.5</option><option value="ม.6">ม.6</option>
+                        </select>
+                    </div>
+                    <div class="mb-2">
+                        <label>สถานะ</label>
+                        <div>
+                            <input type="radio" name="edit_status" id="edit_status_go" value="ไป" onclick="toggleReason('edit_reason_box', 'edit_reason', 'edit_status_nogo', true)"> ไป
+                            <input type="radio" name="edit_status" id="edit_status_nogo" value="ไม่ไป" class="ms-3" onclick="toggleReason('edit_reason_box', 'edit_reason', 'edit_status_nogo', true)"> ไม่ไป
+                        </div>
+                    </div>
+                    <div class="mb-2" id="edit_reason_box" style="display:none;">
+                        <label>เหตุผล</label>
+                        <input type="text" class="form-control" id="edit_reason">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ยกเลิก</button>
+                <button type="button" class="btn btn-primary" onclick="saveEdit()">บันทึกการแก้ไข</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    import { getDatabase, ref, push, onValue, update, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBXlC5PuJ8F72q2u_lWOpF3STi4wtn3wRs",
@@ -289,42 +333,29 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
-    
-    // Global variable to store data for filtering
     let allStudentsData = [];
+    let editModalInstance = null;
 
-    // --- UI Helpers ---
-    window.toggleReason = function() {
-        const isNotGoing = document.getElementById('status_nogo').checked;
-        const reasonBox = document.getElementById('reason_box');
-        const reasonInput = document.getElementById('reason');
+    // --- Toggle Logic (Reused for Add & Edit) ---
+    window.toggleReason = function(boxId, inputId, radioNoGoId, isEdit = false) {
+        const isNotGoing = document.getElementById(radioNoGoId).checked;
+        const box = document.getElementById(boxId);
+        const input = document.getElementById(inputId);
         if (isNotGoing) {
-            reasonBox.style.display = 'block';
-            reasonInput.setAttribute('required', 'required');
-            setTimeout(() => reasonInput.focus(), 100);
+            box.style.display = 'block';
+            if(!isEdit) input.setAttribute('required', 'required');
         } else {
-            reasonBox.style.display = 'none';
-            reasonInput.removeAttribute('required');
-            reasonInput.value = '';
+            box.style.display = 'none';
+            if(!isEdit) { input.removeAttribute('required'); input.value = ''; }
+            else { input.value = '-'; }
         }
     }
 
-    window.printSection = function(sectionId) {
-        document.querySelectorAll('.print-section').forEach(el => el.classList.remove('active-print'));
-        const sectionToPrint = document.getElementById(sectionId);
-        if(sectionToPrint) {
-            sectionToPrint.classList.add('active-print');
-            window.print();
-        }
-    }
-
-    // --- Core Logic ---
-    // Submit
+    // --- 1. ADD DATA ---
     document.getElementById('surveyForm').addEventListener('submit', function(e) {
         e.preventDefault();
         const submitBtn = this.querySelector('button[type="submit"]');
         submitBtn.disabled = true;
-        
         const status = document.querySelector('input[name="status"]:checked').value;
         const data = {
             prefix: document.getElementById('prefix').value,
@@ -337,141 +368,192 @@
         };
 
         push(ref(db, 'students'), data).then(() => {
-            Swal.fire({
-                icon: 'success', title: 'บันทึกสำเร็จ!', text: 'ขอบคุณครับ', 
-                timer: 1500, showConfirmButton: false
-            });
+            Swal.fire({ icon: 'success', title: 'บันทึกสำเร็จ', timer: 1500, showConfirmButton: false });
             document.getElementById('surveyForm').reset();
-            toggleReason();
-        }).catch((err) => Swal.fire('Error', err.message, 'error'))
+            toggleReason('reason_box', 'reason', 'status_nogo');
+        }).catch(err => Swal.fire('Error', err.message, 'error'))
           .finally(() => submitBtn.disabled = false);
     });
 
-    // Real-time Listener
+    // --- 2. READ DATA (Realtime) ---
     onValue(ref(db, 'students'), (snapshot) => {
         const data = snapshot.val();
-        allStudentsData = data ? Object.values(data) : [];
+        allStudentsData = [];
+        if (data) {
+            // Include Key (ID) in data object
+            Object.keys(data).forEach(key => {
+                allStudentsData.push({ ...data[key], id: key });
+            });
+        }
+        
+        // Sort: Grade then Name
+        allStudentsData.sort((a, b) => {
+            if (a.grade === b.grade) return a.firstname.localeCompare(b.firstname, 'th');
+            return a.grade.localeCompare(b.grade);
+        });
+
         updateStats();
-        renderPrintTables(); // Initial Render
+        renderManageTable();
+        renderPrintTables();
     });
 
-    function updateStats() {
-        let total = 0, goCount = 0, noCount = 0;
-        let gradeStats = { 'ม.1': 0, 'ม.2': 0, 'ม.3': 0, 'ม.4': 0, 'ม.5': 0, 'ม.6': 0 };
-
+    // --- 3. MANAGE & EDIT ---
+    function renderManageTable() {
+        const tbody = document.getElementById('manage-table-body');
+        tbody.innerHTML = '';
         allStudentsData.forEach(s => {
-            total++;
-            if (s.status === 'ไป') {
-                goCount++;
-                if (gradeStats[s.grade] !== undefined) gradeStats[s.grade]++;
-            } else {
-                noCount++;
-            }
+            const statusBadge = s.status === 'ไป' 
+                ? '<span class="badge bg-success">ไป</span>' 
+                : '<span class="badge bg-danger">ไม่ไป</span>';
+            
+            tbody.innerHTML += `
+                <tr>
+                    <td>${s.grade}</td>
+                    <td>${s.prefix}${s.firstname} ${s.lastname}</td>
+                    <td>${statusBadge}</td>
+                    <td>
+                        <button class="action-btn btn-edit" onclick="openEditModal('${s.id}')"><i class="fas fa-pen"></i></button>
+                        <button class="action-btn btn-delete" onclick="deleteStudent('${s.id}')"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>
+            `;
         });
-
-        document.getElementById('stat-total').innerText = total;
-        document.getElementById('stat-go').innerText = goCount;
-        document.getElementById('stat-nogo').innerText = noCount;
-
-        const statBody = document.getElementById('stat-table-body');
-        statBody.innerHTML = '';
-        for (const [grade, count] of Object.entries(gradeStats)) {
-            if (count > 0) statBody.innerHTML += `<tr><td>${grade}</td><td class="fw-bold">${count}</td></tr>`;
-        }
-        if(statBody.innerHTML === '') statBody.innerHTML = '<tr><td colspan="2" class="text-muted">ไม่มีข้อมูล</td></tr>';
     }
 
-    // --- Render Tables with Grouping & Filtering ---
-    window.renderPrintTables = function() {
-        const filterGrade = document.getElementById('printFilterGrade').value;
-        const containerGo = document.getElementById('print-container-go');
-        const containerNoGo = document.getElementById('print-container-nogo');
-        const previewArea = document.getElementById('print-preview-area');
-        
-        containerGo.innerHTML = '';
-        containerNoGo.innerHTML = '';
-        
-        // Define grades to loop through
-        const grades = ['ม.1', 'ม.2', 'ม.3', 'ม.4', 'ม.5', 'ม.6'];
-        const targetGrades = (filterGrade === 'All') ? grades : [filterGrade];
-
-        let hasDataGo = false;
-        let hasDataNoGo = false;
-
-        targetGrades.forEach(grade => {
-            // Filter students for this grade
-            const studentsInGrade = allStudentsData.filter(s => s.grade === grade);
-            
-            // Sort by name
-            studentsInGrade.sort((a, b) => a.firstname.localeCompare(b.firstname, 'th'));
-
-            const goStudents = studentsInGrade.filter(s => s.status === 'ไป');
-            const noGoStudents = studentsInGrade.filter(s => s.status === 'ไม่ไป');
-
-            // --- Generate GO Table ---
-            if (goStudents.length > 0) {
-                hasDataGo = true;
-                let rows = '';
-                goStudents.forEach((s, idx) => {
-                    rows += `
-                        <tr>
-                            <td class="text-center">${idx + 1}</td>
-                            <td>${s.prefix}${s.firstname} ${s.lastname}</td>
-                            <td></td>
-                            <td></td>
-                        </tr>`;
-                });
-
-                const tableHtml = `
-                    <div class="grade-table-wrapper">
-                        <div class="grade-header"><i class="fas fa-layer-group me-2"></i>ระดับชั้น ${grade} (จำนวน ${goStudents.length} คน)</div>
-                        <table class="table table-bordered border-success mb-0">
-                            <thead class="table-success text-center">
-                                <tr><th width="10%">ที่</th><th width="40%">ชื่อ-นามสกุล</th><th width="25%">เช็คชื่อ (เช้า)</th><th width="25%">เช็คชื่อ (กลับ)</th></tr>
-                            </thead>
-                            <tbody>${rows}</tbody>
-                        </table>
-                    </div>
-                `;
-                containerGo.innerHTML += tableHtml;
+    window.filterManageTable = function() {
+        const input = document.getElementById("searchInput").value.toLowerCase();
+        const tr = document.getElementById("manage-table-body").getElementsByTagName("tr");
+        for (let i = 0; i < tr.length; i++) {
+            const td = tr[i].getElementsByTagName("td")[1]; // Column Name
+            if (td) {
+                const txtValue = td.textContent || td.innerText;
+                tr[i].style.display = txtValue.toLowerCase().indexOf(input) > -1 ? "" : "none";
             }
+        }
+    }
 
-            // --- Generate NO GO Table ---
-            if (noGoStudents.length > 0) {
-                hasDataNoGo = true;
-                let rows = '';
-                noGoStudents.forEach((s, idx) => {
-                    rows += `
-                        <tr>
-                            <td class="text-center">${idx + 1}</td>
-                            <td>${s.prefix}${s.firstname} ${s.lastname}</td>
-                            <td class="text-danger">${s.reason}</td>
-                        </tr>`;
-                });
-
-                const tableHtml = `
-                    <div class="grade-table-wrapper">
-                        <div class="grade-header border-danger" style="border-left-color: var(--bs-danger);"><i class="fas fa-layer-group me-2"></i>ระดับชั้น ${grade} (จำนวน ${noGoStudents.length} คน)</div>
-                        <table class="table table-bordered border-danger mb-0">
-                            <thead class="table-danger text-center">
-                                <tr><th width="10%">ที่</th><th width="40%">ชื่อ-นามสกุล</th><th width="50%">เหตุผล</th></tr>
-                            </thead>
-                            <tbody>${rows}</tbody>
-                        </table>
-                    </div>
-                `;
-                containerNoGo.innerHTML += tableHtml;
+    // Delete
+    window.deleteStudent = function(id) {
+        Swal.fire({
+            title: 'ยืนยันการลบ?', text: "ข้อมูลจะหายไปถาวร", icon: 'warning',
+            showCancelButton: true, confirmButtonColor: '#d33', confirmButtonText: 'ลบข้อมูล'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                remove(ref(db, 'students/' + id));
             }
         });
+    }
 
-        if (!hasDataGo) containerGo.innerHTML = '<div class="text-center text-muted mt-4">ไม่มีข้อมูลนักเรียนที่ไป สำหรับระดับชั้นนี้</div>';
-        if (!hasDataNoGo) containerNoGo.innerHTML = '<div class="text-center text-muted mt-4">ไม่มีข้อมูลนักเรียนที่ไม่ไป สำหรับระดับชั้นนี้</div>';
+    // Open Edit Modal
+    window.openEditModal = function(id) {
+        const s = allStudentsData.find(x => x.id === id);
+        if (!s) return;
 
-        // Update Preview Area (Show GO list by default in preview)
-        previewArea.innerHTML = `
-            <h5 class="text-secondary mt-3">ตัวอย่างรายการ (สำหรับพิมพ์):</h5>
-            ${containerGo.innerHTML}
-        `;
+        document.getElementById('edit_id').value = id;
+        document.getElementById('edit_prefix').value = s.prefix;
+        document.getElementById('edit_firstname').value = s.firstname;
+        document.getElementById('edit_lastname').value = s.lastname;
+        document.getElementById('edit_grade').value = s.grade;
+        document.getElementById('edit_reason').value = s.reason;
+
+        if (s.status === 'ไป') {
+            document.getElementById('edit_status_go').checked = true;
+            document.getElementById('edit_reason_box').style.display = 'none';
+        } else {
+            document.getElementById('edit_status_nogo').checked = true;
+            document.getElementById('edit_reason_box').style.display = 'block';
+        }
+
+        editModalInstance = new bootstrap.Modal(document.getElementById('editModal'));
+        editModalInstance.show();
+    }
+
+    // Save Edit
+    window.saveEdit = function() {
+        const id = document.getElementById('edit_id').value;
+        const status = document.querySelector('input[name="edit_status"]:checked').value;
+        const newData = {
+            prefix: document.getElementById('edit_prefix').value,
+            firstname: document.getElementById('edit_firstname').value,
+            lastname: document.getElementById('edit_lastname').value,
+            grade: document.getElementById('edit_grade').value,
+            status: status,
+            reason: status === 'ไม่ไป' ? document.getElementById('edit_reason').value : '-'
+        };
+
+        update(ref(db, 'students/' + id), newData).then(() => {
+            Swal.fire({ icon: 'success', title: 'แก้ไขสำเร็จ', timer: 1000, showConfirmButton: false });
+            editModalInstance.hide();
+        });
+    }
+
+    // --- 4. STATS & PRINT (Existing Logic Refined) ---
+    function updateStats() {
+        let total = 0, go = 0, nogo = 0;
+        let gStats = {};
+        allStudentsData.forEach(s => {
+            total++;
+            if (s.status === 'ไป') { go++; gStats[s.grade] = (gStats[s.grade] || 0) + 1; }
+            else { nogo++; }
+        });
+        document.getElementById('stat-total').innerText = total;
+        document.getElementById('stat-go').innerText = go;
+        document.getElementById('stat-nogo').innerText = nogo;
+        
+        const statBody = document.getElementById('stat-table-body');
+        statBody.innerHTML = '';
+        Object.keys(gStats).sort().forEach(g => {
+            statBody.innerHTML += `<tr><td>${g}</td><td class="fw-bold">${gStats[g]}</td></tr>`;
+        });
+    }
+
+    window.printSection = function(id) {
+        document.querySelectorAll('.print-section').forEach(el => el.classList.remove('active-print'));
+        document.getElementById(id).classList.add('active-print');
+        window.print();
+    }
+
+    window.renderPrintTables = function() {
+        const filter = document.getElementById('printFilterGrade').value;
+        const containerGo = document.getElementById('print-container-go');
+        const containerNoGo = document.getElementById('print-container-nogo');
+        const preview = document.getElementById('print-preview-area');
+        
+        containerGo.innerHTML = ''; containerNoGo.innerHTML = '';
+
+        const grades = ['ม.1', 'ม.2', 'ม.3', 'ม.4', 'ม.5', 'ม.6'];
+        const targets = filter === 'All' ? grades : [filter];
+
+        targets.forEach(g => {
+            const students = allStudentsData.filter(s => s.grade === g);
+            const go = students.filter(s => s.status === 'ไป');
+            const nogo = students.filter(s => s.status === 'ไม่ไป');
+
+            if (go.length) {
+                let rows = go.map((s, i) => `<tr><td class="text-center">${i+1}</td><td>${s.prefix}${s.firstname} ${s.lastname}</td><td></td><td></td></tr>`).join('');
+                containerGo.innerHTML += `
+                    <div class="grade-table-wrapper">
+                        <div class="grade-header mt-3 mb-2 fw-bold">ระดับชั้น ${g} (จำนวน ${go.length} คน)</div>
+                        <table class="table table-bordered border-dark">
+                            <thead class="table-light text-center"><tr><th width="10%">ที่</th><th width="40%">ชื่อ-นามสกุล</th><th width="25%">เช็คชื่อ (เช้า)</th><th width="25%">เช็คชื่อ (กลับ)</th></tr></thead>
+                            <tbody>${rows}</tbody>
+                        </table>
+                    </div>`;
+            }
+            if (nogo.length) {
+                let rows = nogo.map((s, i) => `<tr><td class="text-center">${i+1}</td><td>${s.prefix}${s.firstname} ${s.lastname}</td><td>${s.reason}</td></tr>`).join('');
+                containerNoGo.innerHTML += `
+                    <div class="grade-table-wrapper">
+                        <div class="grade-header mt-3 mb-2 fw-bold text-danger">ระดับชั้น ${g} (จำนวน ${nogo.length} คน)</div>
+                        <table class="table table-bordered border-dark">
+                            <thead class="table-light text-center"><tr><th width="10%">ที่</th><th width="40%">ชื่อ-นามสกุล</th><th width="50%">เหตุผล</th></tr></thead>
+                            <tbody>${rows}</tbody>
+                        </table>
+                    </div>`;
+            }
+        });
+        
+        preview.innerHTML = `<h5 class="text-secondary mt-3">ตัวอย่าง (Go):</h5>` + (containerGo.innerHTML || '<div class="text-muted">ไม่มีข้อมูล</div>');
     }
 </script>
 
