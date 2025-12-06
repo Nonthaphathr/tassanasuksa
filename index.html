@@ -59,39 +59,26 @@
         /* Footer */
         .web-footer { text-align: center; padding: 20px; color: #6c757d; font-size: 0.9rem; margin-top: auto; }
 
-        /* === PRINT STYLES FIXED === */
+        /* === PRINT STYLES === */
         .print-section { display: none; } 
         
         @media print {
-            @page { margin: 1cm; size: A4 portrait; } /* Reset page margin */
+            @page { margin: 1cm; size: A4 portrait; }
             body { 
                 background-color: white; 
                 margin: 0; 
                 padding: 0; 
-                visibility: hidden; /* Hide everything by default */
+                visibility: hidden; 
             }
-            
-            /* Hide web UI elements */
             .no-print-area, .main-container, .web-footer, .modal { display: none !important; }
 
-            /* Show specific print section */
             .print-section.active-print { 
                 display: block !important; 
                 visibility: visible;
-                position: absolute;
-                left: 0;
-                top: 0;
-                width: 100%;
-                margin: 0;
+                position: absolute; left: 0; top: 0; width: 100%;
             }
 
-            /* Header Positioning */
-            .print-header-content {
-                width: 100%;
-                text-align: center;
-                margin-bottom: 20px;
-                display: block;
-            }
+            .print-header-content { width: 100%; text-align: center; margin-bottom: 20px; display: block; }
             .print-header-content img { height: 70px; }
             .print-header-content h3 { margin-top: 10px; font-size: 20pt; font-weight: bold; }
 
@@ -104,7 +91,6 @@
                 text-align: center; font-size: 12px; color: #555;
                 padding: 10px; border-top: 1px solid #ccc; background: white;
             }
-            /* Prevent page break inside table group */
             .grade-table-wrapper { break-inside: avoid; page-break-inside: avoid; margin-bottom: 20px; }
         }
     </style>
@@ -119,7 +105,7 @@
 
     <ul class="nav nav-pills justify-content-center mb-4" id="myTab" role="tablist">
         <li class="nav-item"><button class="nav-link active" data-bs-toggle="pill" data-bs-target="#form-content"><i class="fas fa-user-edit me-2"></i>กรอกข้อมูล</button></li>
-        <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#manage-content"><i class="fas fa-tasks me-2"></i>จัดการข้อมูล (แก้ไข/ลบ)</button></li>
+        <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#manage-content"><i class="fas fa-tasks me-2"></i>จัดการข้อมูล</button></li>
         <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#stats-content"><i class="fas fa-chart-pie me-2"></i>สรุปสถิติ</button></li>
         <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#print-content"><i class="fas fa-print me-2"></i>พิมพ์รายชื่อ</button></li>
     </ul>
@@ -129,6 +115,27 @@
         <div class="tab-pane fade show active" id="form-content">
             <form id="surveyForm">
                 <div class="row g-3">
+                    <div class="col-md-3">
+                        <label class="form-label">ระดับชั้น</label>
+                        <select class="form-select" id="grade" required>
+                            <option value="">เลือก</option>
+                            <option value="ม.1">ม.1</option>
+                            <option value="ม.2">ม.2</option>
+                            <option value="ม.3">ม.3</option>
+                            <option value="ม.4">ม.4</option>
+                            <option value="ม.5">ม.5</option>
+                            <option value="ม.6">ม.6</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">เลขที่</label>
+                        <input type="number" class="form-control" id="student_number" required placeholder="เลขที่">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">เบอร์โทรศัพท์ (ที่ติดต่อได้)</label>
+                        <input type="tel" class="form-control" id="phone" required placeholder="เช่น 081-234-5678" maxlength="10">
+                    </div>
+                    
                     <div class="col-md-2">
                         <label class="form-label">คำนำหน้า</label>
                         <select class="form-select" id="prefix" required>
@@ -147,19 +154,8 @@
                         <label class="form-label">นามสกุล</label>
                         <input type="text" class="form-control" id="lastname" required placeholder="ระบุนามสกุล">
                     </div>
-                    <div class="col-md-4">
-                        <label class="form-label">ระดับชั้น</label>
-                        <select class="form-select" id="grade" required>
-                            <option value="">เลือกระดับชั้น</option>
-                            <option value="ม.1">มัธยมศึกษาปีที่ 1</option>
-                            <option value="ม.2">มัธยมศึกษาปีที่ 2</option>
-                            <option value="ม.3">มัธยมศึกษาปีที่ 3</option>
-                            <option value="ม.4">มัธยมศึกษาปีที่ 4</option>
-                            <option value="ม.5">มัธยมศึกษาปีที่ 5</option>
-                            <option value="ม.6">มัธยมศึกษาปีที่ 6</option>
-                        </select>
-                    </div>
-                    <div class="col-md-8">
+                    
+                    <div class="col-md-12">
                         <label class="form-label d-block">ความประสงค์</label>
                         <div class="p-2 border rounded bg-light d-inline-block">
                             <div class="form-check form-check-inline me-4">
@@ -193,13 +189,14 @@
                     <thead class="table-light sticky-top">
                         <tr>
                             <th>ชั้น</th>
+                            <th>เลขที่</th>
                             <th>ชื่อ-นามสกุล</th>
+                            <th>เบอร์โทร</th>
                             <th>สถานะ</th>
                             <th>จัดการ</th>
                         </tr>
                     </thead>
-                    <tbody id="manage-table-body">
-                        </tbody>
+                    <tbody id="manage-table-body"></tbody>
                 </table>
             </div>
         </div>
@@ -223,13 +220,13 @@
                 <div class="col-md-4">
                     <label class="form-label">กรองระดับชั้นที่จะพิมพ์:</label>
                     <select class="form-select" id="printFilterGrade" onchange="renderPrintTables()">
-                        <option value="All">แสดงทั้งหมด (เรียงตามระดับชั้น)</option>
-                        <option value="ม.1">มัธยมศึกษาปีที่ 1</option>
-                        <option value="ม.2">มัธยมศึกษาปีที่ 2</option>
-                        <option value="ม.3">มัธยมศึกษาปีที่ 3</option>
-                        <option value="ม.4">มัธยมศึกษาปีที่ 4</option>
-                        <option value="ม.5">มัธยมศึกษาปีที่ 5</option>
-                        <option value="ม.6">มัธยมศึกษาปีที่ 6</option>
+                        <option value="All">แสดงทั้งหมด</option>
+                        <option value="ม.1">ม.1</option>
+                        <option value="ม.2">ม.2</option>
+                        <option value="ม.3">ม.3</option>
+                        <option value="ม.4">ม.4</option>
+                        <option value="ม.5">ม.5</option>
+                        <option value="ม.6">ม.6</option>
                     </select>
                 </div>
                 <div class="col-md-8 text-end">
@@ -245,7 +242,7 @@
 <footer class="web-footer no-print-area">
     <hr>
     <p class="mb-0">พัฒนาโดย ครูนนทพัทธ์ หิรัญเรือง</p>
-    <small>ระบบสำรวจข้อมูลนักเรียน Version 3.0</small>
+    <small>ระบบสำรวจข้อมูลนักเรียน Version 5.0 (เพิ่มเบอร์โทรศัพท์)</small>
 </footer>
 
 <div id="print-section-go" class="print-section">
@@ -276,25 +273,33 @@
             <div class="modal-body">
                 <form id="editForm">
                     <input type="hidden" id="edit_id">
+                    <div class="row mb-2">
+                        <div class="col-md-4">
+                             <label>ระดับชั้น</label>
+                            <select class="form-select" id="edit_grade">
+                                <option value="ม.1">ม.1</option><option value="ม.2">ม.2</option><option value="ม.3">ม.3</option>
+                                <option value="ม.4">ม.4</option><option value="ม.5">ม.5</option><option value="ม.6">ม.6</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label>เลขที่</label>
+                            <input type="number" class="form-control" id="edit_student_number">
+                        </div>
+                        <div class="col-md-5">
+                            <label>เบอร์โทร</label>
+                            <input type="tel" class="form-control" id="edit_phone">
+                        </div>
+                    </div>
                     <div class="mb-2">
                         <label>คำนำหน้า</label>
                         <select class="form-select" id="edit_prefix">
-                            <option value="เด็กชาย">ด.ช.</option>
-                            <option value="เด็กหญิง">ด.ญ.</option>
-                            <option value="นาย">นาย</option>
-                            <option value="นางสาว">น.ส.</option>
+                            <option value="เด็กชาย">ด.ช.</option><option value="เด็กหญิง">ด.ญ.</option>
+                            <option value="นาย">นาย</option><option value="นางสาว">น.ส.</option>
                         </select>
                     </div>
                     <div class="row mb-2">
                         <div class="col"><label>ชื่อ</label><input type="text" class="form-control" id="edit_firstname"></div>
                         <div class="col"><label>นามสกุล</label><input type="text" class="form-control" id="edit_lastname"></div>
-                    </div>
-                    <div class="mb-2">
-                        <label>ระดับชั้น</label>
-                        <select class="form-select" id="edit_grade">
-                            <option value="ม.1">ม.1</option><option value="ม.2">ม.2</option><option value="ม.3">ม.3</option>
-                            <option value="ม.4">ม.4</option><option value="ม.5">ม.5</option><option value="ม.6">ม.6</option>
-                        </select>
                     </div>
                     <div class="mb-2">
                         <label>สถานะ</label>
@@ -336,7 +341,6 @@
     let allStudentsData = [];
     let editModalInstance = null;
 
-    // --- Toggle Logic (Reused for Add & Edit) ---
     window.toggleReason = function(boxId, inputId, radioNoGoId, isEdit = false) {
         const isNotGoing = document.getElementById(radioNoGoId).checked;
         const box = document.getElementById(boxId);
@@ -358,10 +362,12 @@
         submitBtn.disabled = true;
         const status = document.querySelector('input[name="status"]:checked').value;
         const data = {
+            grade: document.getElementById('grade').value,
+            studentNumber: document.getElementById('student_number').value,
+            phone: document.getElementById('phone').value,
             prefix: document.getElementById('prefix').value,
             firstname: document.getElementById('firstname').value,
             lastname: document.getElementById('lastname').value,
-            grade: document.getElementById('grade').value,
             status: status,
             reason: status === 'ไม่ไป' ? document.getElementById('reason').value : '-',
             timestamp: new Date().toISOString()
@@ -375,21 +381,18 @@
           .finally(() => submitBtn.disabled = false);
     });
 
-    // --- 2. READ DATA (Realtime) ---
+    // --- 2. READ DATA ---
     onValue(ref(db, 'students'), (snapshot) => {
         const data = snapshot.val();
         allStudentsData = [];
-        if (data) {
-            // Include Key (ID) in data object
-            Object.keys(data).forEach(key => {
-                allStudentsData.push({ ...data[key], id: key });
-            });
-        }
+        if (data) Object.keys(data).forEach(key => allStudentsData.push({ ...data[key], id: key }));
         
-        // Sort: Grade then Name
         allStudentsData.sort((a, b) => {
-            if (a.grade === b.grade) return a.firstname.localeCompare(b.firstname, 'th');
-            return a.grade.localeCompare(b.grade);
+            if (a.grade !== b.grade) return a.grade.localeCompare(b.grade);
+            const numA = parseInt(a.studentNumber) || 0;
+            const numB = parseInt(b.studentNumber) || 0;
+            if (numA !== numB) return numA - numB;
+            return a.firstname.localeCompare(b.firstname, 'th');
         });
 
         updateStats();
@@ -402,21 +405,18 @@
         const tbody = document.getElementById('manage-table-body');
         tbody.innerHTML = '';
         allStudentsData.forEach(s => {
-            const statusBadge = s.status === 'ไป' 
-                ? '<span class="badge bg-success">ไป</span>' 
-                : '<span class="badge bg-danger">ไม่ไป</span>';
-            
-            tbody.innerHTML += `
-                <tr>
-                    <td>${s.grade}</td>
-                    <td>${s.prefix}${s.firstname} ${s.lastname}</td>
-                    <td>${statusBadge}</td>
-                    <td>
-                        <button class="action-btn btn-edit" onclick="openEditModal('${s.id}')"><i class="fas fa-pen"></i></button>
-                        <button class="action-btn btn-delete" onclick="deleteStudent('${s.id}')"><i class="fas fa-trash"></i></button>
-                    </td>
-                </tr>
-            `;
+            const statusBadge = s.status === 'ไป' ? '<span class="badge bg-success">ไป</span>' : '<span class="badge bg-danger">ไม่ไป</span>';
+            tbody.innerHTML += `<tr>
+                <td>${s.grade}</td>
+                <td>${s.studentNumber}</td>
+                <td>${s.prefix}${s.firstname} ${s.lastname}</td>
+                <td>${s.phone || '-'}</td>
+                <td>${statusBadge}</td>
+                <td>
+                    <button class="action-btn btn-edit" onclick="openEditModal('${s.id}')"><i class="fas fa-pen"></i></button>
+                    <button class="action-btn btn-delete" onclick="deleteStudent('${s.id}')"><i class="fas fa-trash"></i></button>
+                </td>
+            </tr>`;
         });
     }
 
@@ -424,7 +424,7 @@
         const input = document.getElementById("searchInput").value.toLowerCase();
         const tr = document.getElementById("manage-table-body").getElementsByTagName("tr");
         for (let i = 0; i < tr.length; i++) {
-            const td = tr[i].getElementsByTagName("td")[1]; // Column Name
+            const td = tr[i].getElementsByTagName("td")[2]; // Name col
             if (td) {
                 const txtValue = td.textContent || td.innerText;
                 tr[i].style.display = txtValue.toLowerCase().indexOf(input) > -1 ? "" : "none";
@@ -432,30 +432,23 @@
         }
     }
 
-    // Delete
     window.deleteStudent = function(id) {
-        Swal.fire({
-            title: 'ยืนยันการลบ?', text: "ข้อมูลจะหายไปถาวร", icon: 'warning',
-            showCancelButton: true, confirmButtonColor: '#d33', confirmButtonText: 'ลบข้อมูล'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                remove(ref(db, 'students/' + id));
-            }
-        });
+        Swal.fire({ title: 'ยืนยันการลบ?', text: "ข้อมูลจะหายไปถาวร", icon: 'warning', showCancelButton: true, confirmButtonColor: '#d33', confirmButtonText: 'ลบข้อมูล' })
+        .then((result) => { if (result.isConfirmed) remove(ref(db, 'students/' + id)); });
     }
 
-    // Open Edit Modal
     window.openEditModal = function(id) {
         const s = allStudentsData.find(x => x.id === id);
         if (!s) return;
-
         document.getElementById('edit_id').value = id;
+        document.getElementById('edit_grade').value = s.grade;
+        document.getElementById('edit_student_number').value = s.studentNumber;
+        document.getElementById('edit_phone').value = s.phone || '';
         document.getElementById('edit_prefix').value = s.prefix;
         document.getElementById('edit_firstname').value = s.firstname;
         document.getElementById('edit_lastname').value = s.lastname;
-        document.getElementById('edit_grade').value = s.grade;
         document.getElementById('edit_reason').value = s.reason;
-
+        
         if (s.status === 'ไป') {
             document.getElementById('edit_status_go').checked = true;
             document.getElementById('edit_reason_box').style.display = 'none';
@@ -463,34 +456,32 @@
             document.getElementById('edit_status_nogo').checked = true;
             document.getElementById('edit_reason_box').style.display = 'block';
         }
-
         editModalInstance = new bootstrap.Modal(document.getElementById('editModal'));
         editModalInstance.show();
     }
 
-    // Save Edit
     window.saveEdit = function() {
         const id = document.getElementById('edit_id').value;
         const status = document.querySelector('input[name="edit_status"]:checked').value;
         const newData = {
+            grade: document.getElementById('edit_grade').value,
+            studentNumber: document.getElementById('edit_student_number').value,
+            phone: document.getElementById('edit_phone').value,
             prefix: document.getElementById('edit_prefix').value,
             firstname: document.getElementById('edit_firstname').value,
             lastname: document.getElementById('edit_lastname').value,
-            grade: document.getElementById('edit_grade').value,
             status: status,
             reason: status === 'ไม่ไป' ? document.getElementById('edit_reason').value : '-'
         };
-
         update(ref(db, 'students/' + id), newData).then(() => {
             Swal.fire({ icon: 'success', title: 'แก้ไขสำเร็จ', timer: 1000, showConfirmButton: false });
             editModalInstance.hide();
         });
     }
 
-    // --- 4. STATS & PRINT (Existing Logic Refined) ---
+    // --- 4. STATS & PRINT ---
     function updateStats() {
-        let total = 0, go = 0, nogo = 0;
-        let gStats = {};
+        let total = 0, go = 0, nogo = 0, gStats = {};
         allStudentsData.forEach(s => {
             total++;
             if (s.status === 'ไป') { go++; gStats[s.grade] = (gStats[s.grade] || 0) + 1; }
@@ -502,9 +493,7 @@
         
         const statBody = document.getElementById('stat-table-body');
         statBody.innerHTML = '';
-        Object.keys(gStats).sort().forEach(g => {
-            statBody.innerHTML += `<tr><td>${g}</td><td class="fw-bold">${gStats[g]}</td></tr>`;
-        });
+        Object.keys(gStats).sort().forEach(g => statBody.innerHTML += `<tr><td>${g}</td><td class="fw-bold">${gStats[g]}</td></tr>`);
     }
 
     window.printSection = function(id) {
@@ -520,7 +509,6 @@
         const preview = document.getElementById('print-preview-area');
         
         containerGo.innerHTML = ''; containerNoGo.innerHTML = '';
-
         const grades = ['ม.1', 'ม.2', 'ม.3', 'ม.4', 'ม.5', 'ม.6'];
         const targets = filter === 'All' ? grades : [filter];
 
@@ -530,29 +518,28 @@
             const nogo = students.filter(s => s.status === 'ไม่ไป');
 
             if (go.length) {
-                let rows = go.map((s, i) => `<tr><td class="text-center">${i+1}</td><td>${s.prefix}${s.firstname} ${s.lastname}</td><td></td><td></td></tr>`).join('');
+                let rows = go.map((s, i) => `<tr><td class="text-center">${i+1}</td><td class="text-center">${s.studentNumber}</td><td>${s.prefix}${s.firstname} ${s.lastname}</td><td class="text-center">${s.phone || '-'}</td><td></td><td></td></tr>`).join('');
                 containerGo.innerHTML += `
                     <div class="grade-table-wrapper">
                         <div class="grade-header mt-3 mb-2 fw-bold">ระดับชั้น ${g} (จำนวน ${go.length} คน)</div>
                         <table class="table table-bordered border-dark">
-                            <thead class="table-light text-center"><tr><th width="10%">ที่</th><th width="40%">ชื่อ-นามสกุล</th><th width="25%">เช็คชื่อ (เช้า)</th><th width="25%">เช็คชื่อ (กลับ)</th></tr></thead>
+                            <thead class="table-light text-center"><tr><th width="5%">ที่</th><th width="10%">เลขที่</th><th width="35%">ชื่อ-นามสกุล</th><th width="15%">เบอร์โทร</th><th width="15%">เช็คชื่อ(1)</th><th width="15%">เช็คชื่อ(2)</th></tr></thead>
                             <tbody>${rows}</tbody>
                         </table>
                     </div>`;
             }
             if (nogo.length) {
-                let rows = nogo.map((s, i) => `<tr><td class="text-center">${i+1}</td><td>${s.prefix}${s.firstname} ${s.lastname}</td><td>${s.reason}</td></tr>`).join('');
+                let rows = nogo.map((s, i) => `<tr><td class="text-center">${i+1}</td><td class="text-center">${s.studentNumber}</td><td>${s.prefix}${s.firstname} ${s.lastname}</td><td>${s.reason}</td></tr>`).join('');
                 containerNoGo.innerHTML += `
                     <div class="grade-table-wrapper">
                         <div class="grade-header mt-3 mb-2 fw-bold text-danger">ระดับชั้น ${g} (จำนวน ${nogo.length} คน)</div>
                         <table class="table table-bordered border-dark">
-                            <thead class="table-light text-center"><tr><th width="10%">ที่</th><th width="40%">ชื่อ-นามสกุล</th><th width="50%">เหตุผล</th></tr></thead>
+                            <thead class="table-light text-center"><tr><th width="5%">ที่</th><th width="10%">เลขที่</th><th width="35%">ชื่อ-นามสกุล</th><th width="50%">เหตุผล</th></tr></thead>
                             <tbody>${rows}</tbody>
                         </table>
                     </div>`;
             }
         });
-        
         preview.innerHTML = `<h5 class="text-secondary mt-3">ตัวอย่าง (Go):</h5>` + (containerGo.innerHTML || '<div class="text-muted">ไม่มีข้อมูล</div>');
     }
 </script>
