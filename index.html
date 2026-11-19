@@ -361,16 +361,36 @@
 
     async function api(action, data = {}) {
         const payload = { action, ...data };
-        if (action === 'list') {
-            const res = await fetch(GAS_API_URL + '?action=list&callback=__gasCallback');
-            const text = await res.text();
-            return JSON.parse(text.replace(/^__gasCallback\\(/, '').replace(/\\);?$/, ''));
+
+        // Read-only requests use GET to avoid cross-origin POST issues
+        // with Google Apps Script Web Apps.
+        if (action === 'list' || action === 'students') {
+            const params = new URLSearchParams({ action });
+            const res = await fetch(GAS_API_URL + '?' + params.toString(), {
+                method: 'GET',
+                redirect: 'follow',
+                cache: 'no-store'
+            });
+
+            if (!res.ok) {
+                throw new Error('GAS API HTTP ' + res.status);
+            }
+
+            return await res.json();
         }
+
+        // Write operations use POST with text/plain to avoid CORS preflight.
         const res = await fetch(GAS_API_URL, {
             method: 'POST',
+            redirect: 'follow',
             headers: {'Content-Type': 'text/plain;charset=utf-8'},
             body: JSON.stringify(payload)
         });
+
+        if (!res.ok) {
+            throw new Error('GAS API HTTP ' + res.status);
+        }
+
         return await res.json();
     }
 
